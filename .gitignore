@@ -1,0 +1,152 @@
+# =========================
+
+# Build results
+
+# =========================
+
+bin/
+obj/
+out/
+dist/
+
+# =========================
+
+# User-specific files
+
+# =========================
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+
+# IDE (Visual Studio / VS Code / Rider)
+
+# =========================
+
+.vs/
+.vscode/
+.idea/
+
+# =========================
+
+# Logs
+
+# =========================
+
+*.log
+
+# =========================
+
+# OS files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# .NET Core
+
+# =========================
+
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# =========================
+
+# Entity Framework
+
+# =========================
+
+Migrations/*.Designer.cs
+*.db
+*.db-shm
+*.db-wal
+
+# =========================
+
+# Secrets & Config
+
+# =========================
+
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+
+# =========================
+
+# Environment files
+
+# =========================
+
+.env
+.env.*
+
+# =========================
+
+# NuGet
+
+# =========================
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# =========================
+
+# Docker
+
+# =========================
+
+docker-compose.override.yml
+
+# =========================
+
+# Coverage / Testing
+
+# =========================
+
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# =========================
+
+# Publish
+
+# =========================
+
+publish/
+*.publishsettings
+
+# =========================
+
+# Resharper / Rider
+
+# =========================
+
+_ReSharper*/
+*.DotSettings.user
+
+# =========================
+
+# Temporary files
+
+# =========================
+
+*.tmp
+*.temp
+
+# Database volume (kalau ada)
+postgres_data/
+
+# Redis dump
+dump.rdb
