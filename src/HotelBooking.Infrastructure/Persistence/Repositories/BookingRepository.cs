@@ -16,6 +16,9 @@ public class BookingRepository : IBookingRepository
             .Include(b => b.Room)
             .Include(b => b.Guest)
             .FirstOrDefaultAsync(b => b.Id == id, ct);
+    
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
+        => await _db.Bookings.AnyAsync(b => b.Id == id, ct);
 
     public async Task AddAsync(Booking booking, CancellationToken ct)
         => await _db.Bookings.AddAsync(booking, ct);
@@ -26,7 +29,7 @@ public class BookingRepository : IBookingRepository
         {
             await _db.SaveChangesAsync(ct);
         }
-        catch (DbUpdateConcurrencyException ex)
+        catch (DbUpdateConcurrencyException)
         {
             throw new ConcurrencyException("Data telah diubah oleh proses lain.");
         }

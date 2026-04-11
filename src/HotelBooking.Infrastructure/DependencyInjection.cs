@@ -31,6 +31,7 @@ public static class DependencyInjection
 
         // Daftarkan implementasi
         services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IGuestRepository, GuestRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<IDistributedLockService, RedisLockService>();
 

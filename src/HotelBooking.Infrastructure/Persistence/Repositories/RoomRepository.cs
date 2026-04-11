@@ -13,6 +13,9 @@ public class RoomRepository : IRoomRepository
 
     public async Task<Room?> GetByIdAsync(Guid id, CancellationToken ct)
         => await _db.Rooms.FirstOrDefaultAsync(r => r.Id == id, ct);
+    
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
+        => await _db.Rooms.AnyAsync(r => r.Id == id, ct);
 
     public async Task<bool> HasConflictAsync(
         Guid roomId,

@@ -1,11 +1,31 @@
 using FluentAssertions;
 using HotelBooking.Application.Bookings.Commands.CreateBooking;
+using HotelBooking.Application.Common.Interfaces;
+using Moq;
 
 namespace HotelBooking.Application.Tests.Bookings;
 
 public class CreateBookingValidatorTests
 {
-    private readonly CreateBookingValidator _validator = new();
+    private readonly Mock<IRoomRepository> _roomRepository = new();
+    private readonly Mock<IGuestRepository> _guestRepository = new();
+    private readonly CreateBookingValidator _validator;
+
+    public CreateBookingValidatorTests()
+    {
+        // Default: room dan guest dianggap ada
+        _roomRepository
+            .Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        _guestRepository
+            .Setup(g => g.ExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        _validator = new CreateBookingValidator(
+            _roomRepository.Object,
+            _guestRepository.Object);
+    }
 
     [Fact]
     public async Task Validate_ShouldPass_WhenCommandIsValid()
@@ -22,6 +42,48 @@ public class CreateBookingValidatorTests
 
         // Assert
         result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Validate_ShouldFail_WhenRoomDoesNotExist()
+    {
+        // Override default — room tidak ditemukan
+        _roomRepository
+            .Setup(r => r.ExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var command = new CreateBookingCommand(
+            Guid.NewGuid(), Guid.NewGuid(),
+            DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
+            DateOnly.FromDateTime(DateTime.Today.AddDays(3)));
+
+        var result = await _validator.ValidateAsync(command);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle(e =>
+            e.PropertyName == nameof(CreateBookingCommand.RoomId) &&
+            e.ErrorMessage == "Kamar tidak ditemukan.");
+    }
+
+    [Fact]
+    public async Task Validate_ShouldFail_WhenGuestDoesNotExist()
+    {
+        // Override default — guest tidak ditemukan
+        _guestRepository
+            .Setup(g => g.ExistsAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var command = new CreateBookingCommand(
+            Guid.NewGuid(), Guid.NewGuid(),
+            DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
+            DateOnly.FromDateTime(DateTime.Today.AddDays(3)));
+
+        var result = await _validator.ValidateAsync(command);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle(e =>
+            e.PropertyName == nameof(CreateBookingCommand.GuestId) &&
+            e.ErrorMessage == "Tamu tidak ditemukan.");
     }
 
     [Fact]
