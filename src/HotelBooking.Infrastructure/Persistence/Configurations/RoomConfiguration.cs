@@ -21,10 +21,14 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(r => r.PricePerNight)
             .HasColumnType("decimal(10,2)");
 
-        // Konfigurasi RowVersion untuk optimistic concurrency
-        builder.Property(r => r.RowVersion)
-            .IsRowVersion()
-            .IsConcurrencyToken();
+        // Konfigurasi RowVersion untuk optimistic concurrency (Hanya untuk SQL Server)
+        // builder.Property(r => r.RowVersion)
+        //     .IsRowVersion()
+        //     .IsConcurrencyToken();
+
+        // Konfigurasi version untuk optimistic concurrency (PostgreSQL)
+        builder.Property(r => r.Version)
+            .IsRowVersion();
 
         builder.HasIndex(r => r.RoomNumber).IsUnique();
     }

@@ -10,11 +10,15 @@ public class Room
     public decimal PricePerNight { get; private set; }
     public bool IsAvailable { get; private set; }
 
-    // EF Core menggunakan RowVersion untuk optimistic concurrency.
+    // EF Core menggunakan RowVersion untuk optimistic concurrency. (Hanya untuk SQL Server)
     // Setiap UPDATE otomatis increment nilai ini.
     // Jika dua transaksi membaca lalu update row yang sama,
     // yang kedua akan mendapat DbUpdateConcurrencyException.
-    public byte[] RowVersion { get; private set; } = Array.Empty<byte>();
+    // public byte[] RowVersion { get; private set; } = Array.Empty<byte>();
+
+    // uint — dipetakan ke xmin (system column PostgreSQL)
+    // Tidak memerlukan kolom tambahan di tabel
+    public uint Version { get; private set; }
 
     // Private constructor — hanya bisa dibuat lewat factory method
     private Room() { }

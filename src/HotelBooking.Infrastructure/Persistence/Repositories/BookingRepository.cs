@@ -1,5 +1,6 @@
 using HotelBooking.Application.Common.Interfaces;
 using HotelBooking.Domain.Entities;
+using HotelBooking.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelBooking.Infrastructure.Persistence.Repositories;
@@ -20,5 +21,14 @@ public class BookingRepository : IBookingRepository
         => await _db.Bookings.AddAsync(booking, ct);
 
     public async Task SaveChangesAsync(CancellationToken ct)
-        => await _db.SaveChangesAsync(ct);
+    {
+        try
+        {
+            await _db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new ConcurrencyException("Data telah diubah oleh proses lain.");
+        }
+    }
 }
