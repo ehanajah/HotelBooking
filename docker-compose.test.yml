@@ -11,3 +11,8 @@ services:
       - "5433:5432"
     tmpfs:
       - /var/lib/postgresql/data    # data tidak persisten — fresh setiap kali dijalankan
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"

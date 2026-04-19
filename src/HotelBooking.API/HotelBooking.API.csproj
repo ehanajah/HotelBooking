@@ -21,4 +21,8 @@
     <ProjectReference Include="..\HotelBooking.Application\HotelBooking.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="HotelBooking.API.Tests" />
+  </ItemGroup>
+
 </Project>

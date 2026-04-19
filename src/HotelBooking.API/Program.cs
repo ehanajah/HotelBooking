@@ -2,6 +2,7 @@ using HotelBooking.Application;
 using HotelBooking.Infrastructure;
 using HotelBooking.API.Middleware;
 using HotelBooking.Infrastructure.Persistence;
+using HotelBooking.Infrastructure.Persistence.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +24,31 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Middleware order penting!
-app.UseMiddleware<GlobalExceptionMiddleware>(); // harus paling awal
+if (args.Contains("--seed"))
+{
+    Console.WriteLine("Running database seeder...");
+
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    await db.Database.MigrateAsync();
+
+    var seeder = new DatabaseSeeder(db);
+    var fresh = args.Contains("--fresh");
+    await seeder.SeedAsync(fresh);
+
+    Console.WriteLine("Seeding done.");
+    return;
+}
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();

@@ -6,6 +6,7 @@
     <Project Path="src/HotelBooking.Infrastructure/HotelBooking.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/HotelBooking.API.Tests/HotelBooking.API.Tests.csproj" />
     <Project Path="tests/HotelBooking.Application.Tests/HotelBooking.Application.Tests.csproj" />
     <Project Path="tests/HotelBooking.Integration.Tests/HotelBooking.Integration.Tests.csproj" />
   </Folder>
